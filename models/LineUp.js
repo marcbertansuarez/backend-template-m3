@@ -23,7 +23,7 @@ const lineupSchema = new Schema({
   video: {
     type: String,
     required: [true, "A video is required"]
-  },
+   },
   author: {
     type: Schema.Types.ObjectId,
     ref: 'User'

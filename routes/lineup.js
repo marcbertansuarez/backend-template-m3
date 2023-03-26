@@ -5,7 +5,7 @@ const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
 
 const lineups = [
     {
-        
+
     }
 ]
 
@@ -35,7 +35,7 @@ router.get('/:lineupId', async (req, res, next) => {
 });
 
 // @desc    Create one line-ups
-// @route   POST /lineup/:lineupId
+// @route   POST /lineup/
 // @access  Private
 router.post('/', isAuthenticated, async (req, res, next) => {
     const { title, agent, map, description, video } = req.body;
@@ -50,12 +50,12 @@ router.post('/', isAuthenticated, async (req, res, next) => {
 // @desc    Edit one line-ups
 // @route   PUT /:lineupId
 // @access  Private
-router.put('/:lineupId', isAuthenticated ,async (req, res, next) => {
+router.put('/:lineupId', isAuthenticated, async (req, res, next) => {
     const { lineupId } = req.params;
     const { title, agent, map, description, video } = req.body;
     try {
         const lineup = await LineUp.findById(lineupId);
-        if(lineup.author.toString() !== req.payload._id) {
+        if(lineup.author._id.toString() !== req.payload._id) {
             res.status(403).json({message: 'You are not allowed to edit this lineup'})
         } else {
         const editedLineup = await LineUp.findByIdAndUpdate(lineupId, { title, agent, map, description, video }, { new: true });
