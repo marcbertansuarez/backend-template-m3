@@ -1,6 +1,17 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-// Import the model
+mongoose.set('strictQuery', true);
+const LineUp = require('../models/LineUp');
+
+const lineups = [
+  {
+    title: 'Brimstone lineup',
+    agent: 'Brimstone',
+    map: 'Bind',
+    description: 'Best lineup of Brimstone',
+    video: 'https://www.youtube.com/watch?v=txjSTa4eXQI&ab_channel=RikuZalaValorant'
+  }
+]
 
 // Place the array you want to seed
 
