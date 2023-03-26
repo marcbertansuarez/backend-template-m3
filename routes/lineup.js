@@ -3,11 +3,6 @@ const LineUp = require('../models/LineUp');
 const jwt = require("jsonwebtoken");
 const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
 
-const lineups = [
-    {
-
-    }
-]
 
 // @desc    Get all line-ups
 // @route   GET /lineup
