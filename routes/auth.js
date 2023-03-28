@@ -48,7 +48,10 @@ router.post('/signup', async (req, res, next) => {
 // @access  Public
 router.post('/login', async (req, res, next) => { 
   console.log(req.headers);
-  const { email, password } = req.body;
+  const {email, password} = req.body
+  // const { usernameOrEmail, password } = req.body;
+  // const isEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(usernameOrEmail);
+  // const key = isEmail ? 'email' : 'username';
   // Check if email or password are provided as empty string 
   if (email === "" || password === "") {
     res.status(400).json({ message: 'Please fill all the fields to login' });
