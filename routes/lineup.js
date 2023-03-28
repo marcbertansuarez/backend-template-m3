@@ -92,10 +92,10 @@ router.post('/:lineupId/review', isAuthenticated, async (req, res, next) => {
     const { content } = req.body;
     try {
         const newReview = await Review.create({content, lineupId: lineupId, userId: user});
-        await LineUp.findByIdAndUpdate(lineupId, {$push: {reviews: newReview} })
+        await LineUp.findByIdAndUpdate(lineupId, {$push: {reviews: newReview} });
         res.status(201).json(newReview);
     } catch (error) {
-        
+        console.log(error);
     }
 })
 
