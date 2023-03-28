@@ -104,13 +104,13 @@ router.post('/:lineupId/review/', isAuthenticated, async (req, res, next) => {
 // @route   Put /:lineupId/review
 // @access  Private
 router.put('/:lineupId/review/:reviewId', isAuthenticated, async (req, res, next) => {
-    const { lineupId, reviewId } = req.params;
+    const { reviewId } = req.params;
     const user = req.payload._id;
     const { content } = req.body;
     try {
         const review = await Review.findById(reviewId)
         if(review.userId.toString() !== user) {
-            res.status(403).json({message: 'You are not allowed to delete this lineup'})
+            res.status(403).json({message: 'You are not allowed to edit this review'})
         } else {
             const editedReview = await Review.findByIdAndUpdate(reviewId, {content});
             res.status(201).json(editedReview);
