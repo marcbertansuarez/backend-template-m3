@@ -33,7 +33,7 @@ router.get('/:lineupId', async (req, res, next) => {
 });
 
 // @desc    Create one line-ups
-// @route   POST /lineup/
+// @route   POST /lineup
 // @access  Private
 router.post('/', isAuthenticated, async (req, res, next) => {
     const { title, agent, map, description, video } = req.body;
@@ -47,7 +47,7 @@ router.post('/', isAuthenticated, async (req, res, next) => {
 });
 
 // @desc    Edit one line-ups
-// @route   PUT /:lineupId
+// @route   PUT lineup/:lineupId
 // @access  Private
 router.put('/:lineupId', isAuthenticated, async (req, res, next) => {
     const { lineupId } = req.params;
@@ -67,7 +67,7 @@ router.put('/:lineupId', isAuthenticated, async (req, res, next) => {
 })
 
 // @desc    Delete one line-ups
-// @route   DELETE /:lineupId
+// @route   DELETE /lineup/:lineupId
 // @access  Private
 router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
     const { lineupId } = req.params;
@@ -84,40 +84,40 @@ router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
     }
 });
 
-// @desc    Create review to a specific lineup
-// @route   POST /:lineupId/review
-// @access  Private
-router.post('/:lineupId/review/', isAuthenticated, async (req, res, next) => {
-    const { lineupId } = req.params;
-    const user = req.payload._id;
-    const { content } = req.body;
-    try {
-        const newReview = await Review.create({content, lineupId: lineupId, userId: user});
-        await LineUp.findByIdAndUpdate(lineupId, {$push: {reviews: newReview} });
-        res.status(201).json(newReview);
-    } catch (error) {
-        console.log(error);
-    }
-})
+// // @desc    Create review to a specific lineup
+// // @route   POST /:lineupId/review
+// // @access  Private
+// router.post('/:lineupId/review/', isAuthenticated, async (req, res, next) => {
+//     const { lineupId } = req.params;
+//     const user = req.payload._id;
+//     const { content } = req.body;
+//     try {
+//         const newReview = await Review.create({content, lineupId: lineupId, userId: user});
+//         await LineUp.findByIdAndUpdate(lineupId, {$push: {reviews: newReview} });
+//         res.status(201).json(newReview);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
 
-// @desc    Edit review to a specific lineup
-// @route   Put /:lineupId/review
-// @access  Private
-router.put('/:lineupId/review/:reviewId', isAuthenticated, async (req, res, next) => {
-    const { reviewId } = req.params;
-    const user = req.payload._id;
-    const { content } = req.body;
-    try {
-        const review = await Review.findById(reviewId)
-        if(review.userId.toString() !== user) {
-            res.status(403).json({message: 'You are not allowed to edit this review'})
-        } else {
-            const editedReview = await Review.findByIdAndUpdate(reviewId, {content});
-            res.status(201).json(editedReview);
-        }
-    } catch (error) {
-        console.log(error);
-    }
-})
+// // @desc    Edit review to a specific lineup
+// // @route   Put /:lineupId/review
+// // @access  Private
+// router.put('/:lineupId/review/:reviewId', isAuthenticated, async (req, res, next) => {
+//     const { reviewId } = req.params;
+//     const user = req.payload._id;
+//     const { content } = req.body;
+//     try {
+//         const review = await Review.findById(reviewId)
+//         if(review.userId.toString() !== user) {
+//             res.status(403).json({message: 'You are not allowed to edit this review'})
+//         } else {
+//             const editedReview = await Review.findByIdAndUpdate(reviewId, {content});
+//             res.status(201).json(editedReview);
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })
 
 module.exports = router;
