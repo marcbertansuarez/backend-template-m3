@@ -52,12 +52,13 @@ router.post('/', isAuthenticated, async (req, res, next) => {
 router.put('/:lineupId', isAuthenticated, async (req, res, next) => {
     const { lineupId } = req.params;
     const { title, agent, map, description, video } = req.body;
+    const user = req.payload._id;
     try {
         const lineup = await LineUp.findById(lineupId);
-        if(lineup.author._id.toString() !== req.payload._id) {
+        if(lineup.author.toString() !== req.payload._id) {
             res.status(403).json({message: 'You are not allowed to edit this lineup'})
         } else {
-        const editedLineup = await LineUp.findByIdAndUpdate(lineupId, { title, agent, map, description, video }, { new: true });
+        const editedLineup = await LineUp.findByIdAndUpdate(lineupId, { title, agent, map, description, video, author: user }, { new: true });
         res.status(200).json(editedLineup);
         }
     } catch (error) {
@@ -86,7 +87,7 @@ router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
 // @desc    Create review to a specific lineup
 // @route   POST /:lineupId/review
 // @access  Private
-router.post('/:lineupId/review', isAuthenticated, async (req, res, next) => {
+router.post('/:lineupId/review/', isAuthenticated, async (req, res, next) => {
     const { lineupId } = req.params;
     const user = req.payload._id;
     const { content } = req.body;
@@ -94,6 +95,26 @@ router.post('/:lineupId/review', isAuthenticated, async (req, res, next) => {
         const newReview = await Review.create({content, lineupId: lineupId, userId: user});
         await LineUp.findByIdAndUpdate(lineupId, {$push: {reviews: newReview} });
         res.status(201).json(newReview);
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+// @desc    Edit review to a specific lineup
+// @route   Put /:lineupId/review
+// @access  Private
+router.put('/:lineupId/review/:reviewId', isAuthenticated, async (req, res, next) => {
+    const { lineupId, reviewId } = req.params;
+    const user = req.payload._id;
+    const { content } = req.body;
+    try {
+        const review = await Review.findById(reviewId)
+        if(review.userId.toString() !== user) {
+            res.status(403).json({message: 'You are not allowed to delete this lineup'})
+        } else {
+            const editedReview = await Review.findByIdAndUpdate(reviewId, {content});
+            res.status(201).json(editedReview);
+        }
     } catch (error) {
         console.log(error);
     }
