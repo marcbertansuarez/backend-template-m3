@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const LineUp = require('../models/LineUp');
+const Review = require('../models/Review');
 const jwt = require("jsonwebtoken");
 const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
 
@@ -22,7 +23,9 @@ router.get('/', async (req, res, next) => {;
 router.get('/:lineupId', async (req, res, next) => {
     const { lineupId } = req.params;
     try {
-        const lineup = await LineUp.findById(lineupId).populate('author');
+        const lineup = await LineUp.findById(lineupId)
+        .populate('author')
+        .populate('reviews');
         res.status(200).json(lineup);
     } catch (error) {
         console.log(error);
@@ -34,8 +37,9 @@ router.get('/:lineupId', async (req, res, next) => {
 // @access  Private
 router.post('/', isAuthenticated, async (req, res, next) => {
     const { title, agent, map, description, video } = req.body;
+    const user = req.payload._id
     try {
-        const newLineup = await LineUp.create({ title, agent, map, description, video });
+        const newLineup = await LineUp.create({ title, agent, map, description, video, author: user });
         res.status(201).json(newLineup);
     } catch (error) {
         console.log(error);
@@ -77,5 +81,22 @@ router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
     } catch (error) {
         console.log(error);
     }
+});
+
+// @desc    Create review to a specific lineup
+// @route   POST /:lineupId/review
+// @access  Private
+router.post('/:lineupId/review', isAuthenticated, async (req, res, next) => {
+    const { lineupId } = req.params;
+    const user = req.payload._id;
+    const { content } = req.body;
+    try {
+        const newReview = await Review.create({content, lineupId: lineupId, userId: user});
+        await LineUp.findByIdAndUpdate(lineupId, {$push: {reviews: newReview} })
+        res.status(201).json(newReview);
+    } catch (error) {
+        
+    }
 })
+
 module.exports = router;
