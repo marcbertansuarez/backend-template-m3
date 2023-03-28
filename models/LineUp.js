@@ -28,12 +28,10 @@ const lineupSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
-  reviews: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Review'
-    }
-  ]
+  reviewsCount: {
+    type: Number,
+    default: 0
+  } 
 },
   {
     timestamps: true

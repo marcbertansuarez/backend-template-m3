@@ -13,7 +13,7 @@ router.post('/:lineupId', isAuthenticated, async (req, res, next) => {
     const { content } = req.body;
     try {
         const newReview = await Review.create({content, lineupId: lineupId, userId: user});
-        await LineUp.findByIdAndUpdate(lineupId, {$push: {reviews: newReview} });
+        await LineUp.findByIdAndUpdate(lineupId, {$inc: {reviewsCount: 1} });
         res.status(201).json(newReview);
     } catch (error) {
         console.log(error);
@@ -52,7 +52,7 @@ router.delete('/:reviewId', isAuthenticated, async (req, res, next) => {
             res.status(403).json({message: 'You are not allowed to delete this review'});
         } else {
             const lineupId = review.lineupId
-            await LineUp.findByIdAndUpdate(lineupId, {$pull: {reviews: reviewId}})
+            await LineUp.findByIdAndUpdate(lineupId, {$inc: {reviewsCount: -1}})
             const deteledReview = await Review.findByIdAndDelete(reviewId);
             res.status(200).json(deteledReview);
         }
