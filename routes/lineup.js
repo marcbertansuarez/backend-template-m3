@@ -36,9 +36,9 @@ router.get('/:lineupId', async (req, res, next) => {
 // @access  Private
 router.post('/', isAuthenticated, async (req, res, next) => {
     const { title, agent, map, description, video } = req.body;
-    const user = req.payload._id
+    const userId = req.payload._id
     try {
-        const newLineup = await LineUp.create({ title, agent, map, description, video, author: user });
+        const newLineup = await LineUp.create({ title, agent, map, description, video, author: userId });
         res.status(201).json(newLineup);
     } catch (error) {
         console.log(error);
@@ -51,13 +51,13 @@ router.post('/', isAuthenticated, async (req, res, next) => {
 router.put('/:lineupId', isAuthenticated, async (req, res, next) => {
     const { lineupId } = req.params;
     const { title, agent, map, description, video } = req.body;
-    const user = req.payload._id;
+    const userId = req.payload._id;
     try {
         const lineup = await LineUp.findById(lineupId);
         if(lineup.author.toString() !== req.payload._id) {
             res.status(403).json({message: 'You are not allowed to edit this lineup'})
         } else {
-        const editedLineup = await LineUp.findByIdAndUpdate(lineupId, { title, agent, map, description, video, author: user }, { new: true });
+        const editedLineup = await LineUp.findByIdAndUpdate(lineupId, { title, agent, map, description, video, author: userId }, { new: true });
         res.status(200).json(editedLineup);
         }
     } catch (error) {

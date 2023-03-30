@@ -8,10 +8,10 @@ const getLikes = require('../utils/likesHelper');
 // @route   GET /profile
 // @access  Private
 router.get('/', isAuthenticated, async (req, res, next) => {
-    const user = req.payload._id;
+    const userId = req.payload._id;
     try {
-        const userDB = await User.findById(user);
-        const lineUps = await LineUp.find({author: user});
+        const userDB = await User.findById(userId);
+        const lineUps = await LineUp.find({author: userId});
         const lineupLikes = await Promise.all(lineUps.map(lineup => {
             return getLikes(lineup, userDB);
         }))
@@ -31,11 +31,11 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 // @route   GET /profile
 // @access  Private
 router.put('/edit', isAuthenticated, async (req, res, next) => {
-    const user = req.payload._id;
+    const userId = req.payload._id;
     const { username, image } = req.body; 
     try {
         const userDB = await User.findById(user);
-        if(userDB._id.toString() !== user) {
+        if(userDB._id.toString() !== userId) {
             res.status(403).json({message: 'You are not allowed to edit this profile'});
         } else {
             const updatedUser = await User.findByIdAndUpdate(user, { username, image }, { new: true })

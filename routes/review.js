@@ -45,10 +45,10 @@ router.put('/:reviewId', isAuthenticated, async (req, res, next) => {
 // @access  Private
 router.delete('/:reviewId', isAuthenticated, async (req, res, next) => {
     const { reviewId } = req.params;
-    const user = req.payload._id;
+    const userId = req.payload._id;
     try {
         const review = await Review.findById(reviewId);
-        if(review.userId.toString() !== user) {
+        if(review.userId.toString() !== userId) {
             res.status(403).json({message: 'You are not allowed to delete this review'});
         } else {
             const lineupId = review.lineupId
