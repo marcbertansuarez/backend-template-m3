@@ -12,9 +12,11 @@ router.get('/', isAuthenticated, async (req, res, next) => {
     try {
         const userDB = await User.findById(userId);
         const lineUps = await LineUp.find({author: userId});
-        const lineupLikes = await Promise.all(lineUps.map(lineup => {
-            return getLikes(lineup, userDB);
+        const prePromiseLineUps = JSON.parse(JSON.stringify(lineUps));
+        const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
+            return await getLikes(lineup, userDB);
         }))
+        console.log(lineupLikes)
         res.status(200).json({
             user: {
                 username: userDB.username,
