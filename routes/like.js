@@ -7,16 +7,16 @@ const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
 // @access  Private
 router.post('/:lineupId', isAuthenticated, async (req, res, next) => {
     const { lineupId } = req.params;
-    const user = req.payload._id;
+    const userId = req.payload._id;
     try {
-        const like = await Like.find({lineupId: lineupId, userId: user});
-        if(!like) {
-            await Like.create({lineupId: lineupId, userId: user});
-            res.status(200).json(like);
-        } else {
-            await Like.findOneAndDelete({lineupId: lineupId, userId: user});
-            res.status(200).json(like);
-        }
+         const like = await Like.findOne({lineupId, userId});
+         if(!like) {
+            const newLike = await Like.create({lineupId, userId});
+            res.status(200).json(newLike);
+         } else {
+            const newLike = await Like.findOneAndDelete({lineupId, userId});
+             res.status(200).json(newLike);  
+         }
     } catch (error) {
         console.log(error);
     }

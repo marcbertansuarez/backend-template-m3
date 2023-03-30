@@ -2,6 +2,7 @@ const router = require('express').Router();
 const LineUp = require('../models/LineUp');
 const User = require('../models/User');
 const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
+const getLikes = require('../utils/likesHelper');
 
 // @desc    Profile user
 // @route   GET /profile
@@ -11,12 +12,15 @@ router.get('/', isAuthenticated, async (req, res, next) => {
     try {
         const userDB = await User.findById(user);
         const lineUps = await LineUp.find({author: user});
+        const lineupLikes = await Promise.all(lineUps.map(lineup => {
+            return getLikes(lineup, userDB);
+        }))
         res.status(200).json({
             user: {
                 username: userDB.username,
                 image: userDB.image
             },
-            lineUps
+            lineupLikes
         })
     } catch (error) {
         console.log(error)

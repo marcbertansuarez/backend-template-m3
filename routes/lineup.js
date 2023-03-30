@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const LineUp = require('../models/LineUp');
+const Review = require('../models/Review');
 const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
 
 
@@ -23,8 +24,8 @@ router.get('/:lineupId', async (req, res, next) => {
     try {
         const lineup = await LineUp.findById(lineupId)
         .populate('author')
-        .populate('reviews');
-        res.status(200).json(lineup);
+        const reviews = await Review.findbyId(lineupId)
+        res.status(200).json(lineup, reviews);
     } catch (error) {
         console.log(error);
     }
@@ -63,59 +64,5 @@ router.put('/:lineupId', isAuthenticated, async (req, res, next) => {
         console.log(error);
     }
 })
-
-// @desc    Delete one line-ups
-// @route   DELETE /lineup/:lineupId
-// @access  Private
-router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
-    const { lineupId } = req.params;
-    try {
-        const lineup = await LineUp.findById(lineupId);
-        if(lineup.author.toString() !== req.payload._id) {
-            res.status(403).json({message: 'You are not allowed to delete this lineup'})
-        } else {
-        const deletedLineup = await LineUp.findByIdAndDelete(lineupId);
-        res.status(200).json(deletedLineup);
-        }
-    } catch (error) {
-        console.log(error);
-    }
-});
-
-// // @desc    Create review to a specific lineup
-// // @route   POST /:lineupId/review
-// // @access  Private
-// router.post('/:lineupId/review/', isAuthenticated, async (req, res, next) => {
-//     const { lineupId } = req.params;
-//     const user = req.payload._id;
-//     const { content } = req.body;
-//     try {
-//         const newReview = await Review.create({content, lineupId: lineupId, userId: user});
-//         await LineUp.findByIdAndUpdate(lineupId, {$push: {reviews: newReview} });
-//         res.status(201).json(newReview);
-//     } catch (error) {
-//         console.log(error);
-//     }
-// })
-
-// // @desc    Edit review to a specific lineup
-// // @route   Put /:lineupId/review
-// // @access  Private
-// router.put('/:lineupId/review/:reviewId', isAuthenticated, async (req, res, next) => {
-//     const { reviewId } = req.params;
-//     const user = req.payload._id;
-//     const { content } = req.body;
-//     try {
-//         const review = await Review.findById(reviewId)
-//         if(review.userId.toString() !== user) {
-//             res.status(403).json({message: 'You are not allowed to edit this review'})
-//         } else {
-//             const editedReview = await Review.findByIdAndUpdate(reviewId, {content});
-//             res.status(201).json(editedReview);
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// })
 
 module.exports = router;
