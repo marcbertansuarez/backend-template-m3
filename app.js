@@ -11,6 +11,7 @@ const authRouter = require('./routes/auth');
 const lineupRouter = require('./routes/lineup');
 const reviewRouter = require('./routes/review');
 const profileRouter = require('./routes/profile');
+const likeRouter = require('./routes/like');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use('/auth', authRouter);
 app.use('/lineup', lineupRouter);
 app.use('/review', reviewRouter);
 app.use('/profile', profileRouter);
+app.use('/like', likeRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
