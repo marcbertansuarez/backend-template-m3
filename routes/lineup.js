@@ -63,6 +63,22 @@ router.put('/:lineupId', isAuthenticated, async (req, res, next) => {
     } catch (error) {
         console.log(error);
     }
-})
+});
+
+router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
+    const { lineupId } = req.params;
+    const userId = req.payload._id;
+    try {
+        const lineup = await LineUp.findById(lineupId);
+        if(lineup.author.toString() !== req.payload._id) {
+            res.status(403).json({message: 'You are not allowed to delete this lineup'})
+        } else {
+            const deletedLineup = await LineUp.findByIdAndDelete(lineup);
+            res.status(200).json(deletedLineup);
+        }
+    } catch (error) {
+        console.log(error)
+    }
+});
 
 module.exports = router;
