@@ -24,8 +24,9 @@ router.get('/:lineupId', async (req, res, next) => {
     try {
         const lineup = await LineUp.findById(lineupId)
         .populate('author')
-        const reviews = await Review.findbyId(lineupId)
-        res.status(200).json(lineup, reviews);
+        const reviews = await Review.find({lineupId: lineupId})
+        .populate('userId')
+        res.status(200).json({lineup, reviews});
     } catch (error) {
         console.log(error);
     }
