@@ -70,7 +70,7 @@ router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
     const userId = req.payload._id;
     try {
         const lineup = await LineUp.findById(lineupId);
-        if(lineup.author.toString() !== req.payload._id) {
+        if(lineup.author.toString() !== userId) {
             res.status(403).json({message: 'You are not allowed to delete this lineup'})
         } else {
             const deletedLineup = await LineUp.findByIdAndDelete(lineup);
