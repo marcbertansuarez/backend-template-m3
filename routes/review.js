@@ -32,7 +32,7 @@ router.put('/:reviewId', isAuthenticated, async (req, res, next) => {
         if(review.userId.toString() !== user) {
             res.status(403).json({message: 'You are not allowed to edit this review'});
         } else {
-            const editedReview = await Review.findByIdAndUpdate(reviewId, {content});
+            const editedReview = await Review.findByIdAndUpdate(reviewId, {content}, {new: true});
             res.status(201).json(editedReview);
         }
     } catch (error) {
