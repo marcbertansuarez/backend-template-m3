@@ -1,14 +1,14 @@
 const router = require('express').Router();
 const LineUp = require('../models/LineUp');
 const Review = require('../models/Review');
-const { isAuthenticated ,isAdmin } = require('../middlewares/jwt');
+const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
 const getLikes = require('../utils/likesHelper');
 
 
 // @desc    Get all line-ups
 // @route   GET /lineup
 // @access  Public
-router.get('/', async (req, res, next) => {;
+router.get('/', async (req, res, next) => {
     try {
         const lineups = await LineUp.find({}).populate('author');
         const prePromiseLineUps = JSON.parse(JSON.stringify(lineups));
