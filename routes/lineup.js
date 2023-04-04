@@ -8,12 +8,13 @@ const getLikes = require('../utils/likesHelper');
 // @desc    Get all line-ups
 // @route   GET /lineup
 // @access  Public
-router.get('/', async (req, res, next) => {
+router.get('/', isAuthenticated, async (req, res, next) => {
+    const user = req.payload ? req.payload : null
     try {
         const lineups = await LineUp.find({}).populate('author');
         const prePromiseLineUps = JSON.parse(JSON.stringify(lineups));
         const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
-            return await getLikes(lineup, null);
+            return await getLikes(lineup, user);
         }))
         res.status(200).json(lineupLikes);
     } catch (error) {
@@ -24,14 +25,15 @@ router.get('/', async (req, res, next) => {
 // @desc    Get one line-ups
 // @route   GET /lineup/:lineupId
 // @access  Public
-router.get('/:lineupId', async (req, res, next) => {
+router.get('/:lineupId', isAuthenticated, async (req, res, next) => {
+    const user = req.payload ? req.payload : null
     const { lineupId } = req.params;
     try {
-        const lineup = await LineUp.findById(lineupId)
-        .populate('author')
+        const lineup = JSON.parse(JSON.stringify(await LineUp.findById(lineupId).populate('author')));
+        const lineupLike = await getLikes(lineup, user);
         const reviews = await Review.find({lineupId: lineupId})
         .populate('userId')
-        res.status(200).json({lineup, reviews});
+        res.status(200).json({lineupLike, reviews});
     } catch (error) {
         console.log(error);
     }
