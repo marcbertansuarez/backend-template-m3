@@ -16,7 +16,6 @@ router.get('/', isAuthenticated, async (req, res, next) => {
         const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
             return await getLikes(lineup, userDB);
         }))
-        console.log(lineupLikes)
         res.status(200).json({
             user: {
                 username: userDB.username,

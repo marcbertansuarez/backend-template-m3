@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const LineUp = require('../models/LineUp');
 const Review = require('../models/Review');
-const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
+const { isAuthenticated ,isAdmin } = require('../middlewares/jwt');
+const getLikes = require('../utils/likesHelper');
 
 
 // @desc    Get all line-ups
@@ -10,7 +11,11 @@ const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
 router.get('/', async (req, res, next) => {;
     try {
         const lineups = await LineUp.find({}).populate('author');
-        res.status(200).json(lineups);
+        const prePromiseLineUps = JSON.parse(JSON.stringify(lineups));
+        const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
+            return await getLikes(lineup, null);
+        }))
+        res.status(200).json(lineupLikes);
     } catch (error) {
         console.log(error);
     }
@@ -74,7 +79,7 @@ router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
         if(lineup.author.toString() !== userId) {
             res.status(403).json({message: 'You are not allowed to delete this lineup'})
         } else {
-            const deletedLineup = await LineUp.findByIdAndDelete(lineup);
+            const deletedLineup = await LineUp.findByIdAndDelete(lineupId);
             res.status(200).json(deletedLineup);
         }
     } catch (error) {
