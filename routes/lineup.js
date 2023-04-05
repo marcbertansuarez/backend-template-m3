@@ -1,14 +1,14 @@
 const router = require('express').Router();
 const LineUp = require('../models/LineUp');
 const Review = require('../models/Review');
-const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
+const { isAuthenticated, checkAuthenticated ,isAdmin } = require('../middlewares/jwt');
 const getLikes = require('../utils/likesHelper');
 
 
 // @desc    Get all line-ups
 // @route   GET /lineup
 // @access  Public
-router.get('/', isAuthenticated, async (req, res, next) => {
+router.get('/', checkAuthenticated, async (req, res, next) => {
     const user = req.payload ? req.payload : null
     try {
         const lineups = await LineUp.find({}).populate('author');
@@ -25,7 +25,7 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 // @desc    Get one line-ups
 // @route   GET /lineup/:lineupId
 // @access  Public
-router.get('/:lineupId', isAuthenticated, async (req, res, next) => {
+router.get('/:lineupId', checkAuthenticated, async (req, res, next) => {
     const user = req.payload ? req.payload : null
     const { lineupId } = req.params;
     try {
