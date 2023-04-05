@@ -52,7 +52,11 @@ router.get('/liked', isAuthenticated, async (req, res, next) => {
     const userId = req.payload._id;
     try {
         const userDB = await User.findById(userId);
-        const liked = await Like.find({userId: userId}).populate('lineupId');
+        const liked = await Like.find({userId: userId})
+        .populate({
+            path: 'lineupId',
+            populate: {path: 'author'}
+        });
         const prePromiseLikes = JSON.parse(JSON.stringify(liked));
         const likedLineUps = await Promise.all(prePromiseLikes.map(async (lineup) => {
             return await getLikes(lineup.lineupId, userDB);
