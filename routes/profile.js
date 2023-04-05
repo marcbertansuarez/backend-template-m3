@@ -40,7 +40,7 @@ router.put('/edit', isAuthenticated, async (req, res, next) => {
         if(userDB._id.toString() !== userId) {
             res.status(403).json({message: 'You are not allowed to edit this profile'});
         } else {
-            const updatedUser = await User.findByIdAndUpdate(user, { username, image }, { new: true })
+            const updatedUser = await User.findByIdAndUpdate(userId, { username, image }, { new: true })
             res.status(200).json(updatedUser)
         } 
     } catch (error) {
