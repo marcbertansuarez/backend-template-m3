@@ -67,6 +67,28 @@ router.get('/liked', isAuthenticated, async (req, res, next) => {
     } catch (error) {
         console.log(error)
     }
+});
+
+router.get('/:userId', isAuthenticated, async (req, res, next) => {
+    const { userId } = req.params;
+    const user = req.payload;
+    try {
+        const userDB = await User.findById(userId)
+        const lineUps = await LineUp.find({author: userId});
+        const prePromiseLineUps = JSON.parse(JSON.stringify(lineUps));
+        const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
+            return await getLikes(lineup, user);
+        }))
+        res.status(200).json({
+            user: {
+                username: userDB.username,
+                image: userDB.image
+            },
+            lineupLikes
+        })
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 module.exports = router;
