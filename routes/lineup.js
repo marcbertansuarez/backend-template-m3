@@ -1,14 +1,14 @@
 const router = require('express').Router();
 const LineUp = require('../models/LineUp');
 const Review = require('../models/Review');
-const { isAuthenticated, checkAuthenticated ,isAdmin } = require('../middlewares/jwt');
+const { isAuthenticated ,isAdmin } = require('../middlewares/jwt');
 const getLikes = require('../utils/likesHelper');
 
 
 // @desc    Get all line-ups
 // @route   GET /lineup
 // @access  Public
-router.get('/', checkAuthenticated, async (req, res, next) => {
+router.get('/', isAuthenticated, async (req, res, next) => {
     console.log(req.payload)
     const user = req.payload ? req.payload : null
     try {

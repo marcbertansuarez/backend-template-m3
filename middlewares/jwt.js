@@ -12,25 +12,26 @@ function getTokenFromHeaders(req) {
 }
 
 const isAuthenticated = jwt({
-  secret: process.env.TOKEN_SECRET,
-  algorithms: ["HS256"],
-  requestProperty: 'payload',
-  getToken: getTokenFromHeaders//token
-});
+    secret: process.env.TOKEN_SECRET,
+    algorithms: ["HS256"],
+    requestProperty: 'payload',
+    getToken: getTokenFromHeaders//token
+  });
 
-const checkAuthenticated = async (req, res, next) => {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(" ")[1];
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.payload = decoded;
-      console.log(req.payload)
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  next();
-};
+
+// const checkAuthenticated = async (req, res, next) => {
+//   if (req.headers.authorization) {
+//     const token = req.headers.authorization.split(" ")[1];
+//     try {
+//       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//       req.payload = decoded;
+//       console.log(req.payload)
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   }
+//   next();
+// };
 
 
 const isAdmin = (req, res, next) => {
@@ -44,7 +45,6 @@ const isAdmin = (req, res, next) => {
 
 module.exports = {
   isAuthenticated,
-  checkAuthenticated,
   isAdmin
 }
 

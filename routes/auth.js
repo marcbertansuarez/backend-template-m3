@@ -47,22 +47,20 @@ router.post('/signup', async (req, res, next) => {
 // @route   POST /api/v1/auth/login
 // @access  Public
 router.post('/login', async (req, res, next) => { 
-  console.log(req.headers);
-  const {email, password} = req.body
-  // const { usernameOrEmail, password } = req.body;
-  // const isEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(usernameOrEmail);
-  // const key = isEmail ? 'email' : 'username';
+  const { usernameOrEmail, password } = req.body;
+  const isEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(usernameOrEmail);
+  const key = isEmail ? 'email' : 'username';
   // Check if email or password are provided as empty string 
-  if (email === "" || password === "") {
+  if (usernameOrEmail === "" || password === "") {
     res.status(400).json({ message: 'Please fill all the fields to login' });
     return;
   }
   try {
     // First let's see if the user exists
-    const userInDB = await User.findOne({ email });
+    const userInDB = await User.findOne({ [key]: usernameOrEmail });
     // If they don't exist, return an error
     if (!userInDB) {
-      res.status(404).json({ success: false, message: `No user registered by email ${email}` })
+      res.status(404).json({ success: false, message: `No user registered by email ${usernameOrEmail}` })
       return;
     } else {
       const passwordMatches = bcrypt.compareSync(password, userInDB.hashedPassword);
