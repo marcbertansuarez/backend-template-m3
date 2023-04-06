@@ -4,12 +4,19 @@ const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
 const saltRounds = 10;
+const fileUploader = require('../config/cloudinary.config');
 
 // @desc    SIGN UP new user
 // @route   POST /api/v1/auth/signup
 // @access  Public
-router.post('/signup', async (req, res, next) => {
+router.post('/signup', fileUploader.single('image') ,async (req, res, next) => {
   const { email, password, username } = req.body;
+  let image = '';
+  if(req.file) {
+    image = req.file.path
+  } else {
+    image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Valorant_logo_-_pink_color_version.svg/1200px-Valorant_logo_-_pink_color_version.svg.png'
+  }
   // Check if email or password or name are provided as empty string 
   if (email === "" || password === "" || username === "") {
     res.status(400).json({ message: 'Please fill all the fields to register' });
@@ -35,7 +42,7 @@ router.post('/signup', async (req, res, next) => {
     } else {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(password, salt);
-      const newUser = await User.create({ email, hashedPassword, username });
+      const newUser = await User.create({ email, hashedPassword, username, image });
       res.status(201).json({ data: newUser });
     }
   } catch (error) {

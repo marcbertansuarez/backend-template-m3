@@ -4,6 +4,8 @@ const User = require('../models/User');
 const Like = require('../models/Like');
 const { isAuthenticated, isAdmin } = require('../middlewares/jwt');
 const getLikes = require('../utils/likesHelper');
+const fileUploader = require('../config/cloudinary.config');
+const cloudinary = require('cloudinary');
 
 // @desc    Profile user
 // @route   GET /profile
@@ -32,15 +34,20 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 // @desc    Profile user
 // @route   GET /profile
 // @access  Private
-router.put('/edit', isAuthenticated, async (req, res, next) => {
-    const userId = req.payload._id;
-    const { username, image } = req.body; 
+router.put('/edit', isAuthenticated, fileUploader.single('image') ,async (req, res, next) => {
+    const user = req.payload;
+    const { username } = req.body; 
+    if(req.file) {
+        image = req.file.path;
+    } else {
+        image = cloudinary.url(user.picture)
+    }
     try {
-        const userDB = await User.findById(userId);
-        if(userDB._id.toString() !== userId) {
+        const userDB = await User.findById(user._id);
+        if(userDB._id.toString() !== user._id) {
             res.status(403).json({message: 'You are not allowed to edit this profile'});
         } else {
-            const updatedUser = await User.findByIdAndUpdate(userId, { username, image }, { new: true })
+            const updatedUser = await User.findByIdAndUpdate(user._id, { username, image }, { new: true })
             res.status(200).json(updatedUser)
         } 
     } catch (error) {
