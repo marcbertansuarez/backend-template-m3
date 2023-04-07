@@ -23,6 +23,20 @@ router.get('/', isAuthenticated, async (req, res, next) => {
     }
 });
 
+// @desc    Search lineups for agents
+// @route   GET lineup/:lineupId
+// @access  Public
+router.get('/search', isAuthenticated, async (req, res, next) => {
+    console.log('Search received')
+    const { agent } = req.query;
+    try {
+        const searchResult = await LineUp.find({agent: agent});
+        res.status(200).json(searchResult);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 // @desc    Get one line-ups
 // @route   GET /lineup/:lineupId
 // @access  Public
@@ -74,6 +88,9 @@ router.put('/:lineupId', isAuthenticated, async (req, res, next) => {
     }
 });
 
+// @desc    Delete one line-ups
+// @route   DELETE lineup/:lineupId
+// @access  Private
 router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
     const { lineupId } = req.params;
     const userId = req.payload._id;
@@ -89,5 +106,7 @@ router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
         console.log(error)
     }
 });
+
+
 
 module.exports = router;
