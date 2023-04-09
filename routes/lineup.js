@@ -3,11 +3,12 @@ const LineUp = require('../models/LineUp');
 const Review = require('../models/Review');
 const { isAuthenticated ,isAdmin } = require('../middlewares/jwt');
 const getLikes = require('../utils/likesHelper');
+const Like = require('../models/Like');
 
 
 // @desc    Get all line-ups
 // @route   GET /lineup
-// @access  Public
+// @access  Private
 router.get('/', isAuthenticated, async (req, res, next) => {
     console.log(req.payload)
     const user = req.payload ? req.payload : null
@@ -24,9 +25,9 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 });
 
 // @desc    Search lineups for agents
-// @route   GET lineup/:lineupId
+// @route   GET lineup/search
 // @access  Public
-router.get('/search', isAuthenticated, async (req, res, next) => {
+router.get('/search', async (req, res, next) => {
     console.log('Search received')
     const { agent } = req.query;
     try {
@@ -39,7 +40,7 @@ router.get('/search', isAuthenticated, async (req, res, next) => {
 
 // @desc    Get one line-ups
 // @route   GET /lineup/:lineupId
-// @access  Public
+// @access  Private
 router.get('/:lineupId', isAuthenticated ,async (req, res, next) => {
     const user = req.payload ? req.payload : null
     const { lineupId } = req.params;
@@ -99,8 +100,10 @@ router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
         if(lineup.author.toString() !== userId) {
             res.status(403).json({message: 'You are not allowed to delete this lineup'})
         } else {
+            const deletedReview = await Review.findByIdAndDelete(lineupId);
+            const deletedLike = await Like.findByIdAndDelete(lineupId)
             const deletedLineup = await LineUp.findByIdAndDelete(lineupId);
-            res.status(200).json(deletedLineup);
+            res.status(200).json(deletedLineup, deletedLike, deletedReview);
         }
     } catch (error) {
         console.log(error)
