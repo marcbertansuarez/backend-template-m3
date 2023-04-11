@@ -14,7 +14,7 @@ router.get('/', isAuthenticated, async (req, res, next) => {
     const userId = req.payload._id;
     try {
         const userDB = await User.findById(userId);
-        const lineUps = await LineUp.find({author: userId});
+        const lineUps = await LineUp.find({author: userId}).populate('author');
         const prePromiseLineUps = JSON.parse(JSON.stringify(lineUps));
         const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
             return await getLikes(lineup, userDB);
@@ -85,7 +85,7 @@ router.get('/:userId', isAuthenticated, async (req, res, next) => {
     const user = req.payload;
     try {
         const userDB = await User.findById(userId)
-        const lineUps = await LineUp.find({author: userId});
+        const lineUps = await LineUp.find({author: userId}).populate('author');
         const prePromiseLineUps = JSON.parse(JSON.stringify(lineUps));
         const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
             return await getLikes(lineup, user);
