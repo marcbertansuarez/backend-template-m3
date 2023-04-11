@@ -10,13 +10,28 @@ const Like = require('../models/Like');
 // @route   GET /lineup
 // @access  Private
 router.get('/', isAuthenticated, async (req, res, next) => {
-    console.log(req.payload)
-    const user = req.payload ? req.payload : null
+    const user = req.payload;
     try {
         const lineups = await LineUp.find({}).populate('author');
         const prePromiseLineUps = JSON.parse(JSON.stringify(lineups));
         const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
             return await getLikes(lineup, user);
+        }))
+        res.status(200).json(lineupLikes);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+// @desc    Get all line-ups
+// @route   GET /lineup/lineup
+// @access  Public (No user login)
+router.get('/lineup', async (req, res, next) => {
+    try {
+        const lineups = await LineUp.find({}).populate('author');
+        const prePromiseLineUps = JSON.parse(JSON.stringify(lineups));
+        const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
+            return await getLikes(lineup, null);
         }))
         res.status(200).json(lineupLikes);
     } catch (error) {
