@@ -43,11 +43,14 @@ router.get('/lineup', async (req, res, next) => {
 // @route   GET lineup/search
 // @access  Public
 router.get('/search', async (req, res, next) => {
-    console.log('Search received')
     const { agent } = req.query;
     try {
-        const searchResult = await LineUp.find({agent: agent});
-        res.status(200).json(searchResult);
+        const searchResult = await LineUp.find({agent: agent}).populate('author');
+        const prePromiseLineUps = JSON.parse(JSON.stringify(searchResult));
+        const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
+            return await getLikes(lineup, null);
+        }))
+        res.status(200).json(lineupLikes);
     } catch (error) {
         console.log(error);
     }
@@ -115,8 +118,9 @@ router.delete('/:lineupId', isAuthenticated, async (req, res, next) => {
         if(lineup.author.toString() !== userId) {
             res.status(403).json({message: 'You are not allowed to delete this lineup'})
         } else {
-            const deletedReview = await Review.findByIdAndDelete(lineupId);
-            const deletedLike = await Like.findByIdAndDelete(lineupId)
+            const lineup = await LineUp.findById(lineupId)
+            const deletedReview = await Review.deleteMany({lineupId: lineup._id})
+            const deletedLike = await Like.deleteMany({lineupId: lineup._id})
             const deletedLineup = await LineUp.findByIdAndDelete(lineupId);
             res.status(200).json(deletedLineup, deletedLike, deletedReview);
         }
