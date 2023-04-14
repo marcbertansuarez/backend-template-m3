@@ -56,6 +56,21 @@ router.get('/search', async (req, res, next) => {
     }
 });
 
+router.get('/popularity', isAuthenticated ,async (req, res, next) => {
+    const user = req.payload;
+    try {
+        const lineups = await LineUp.find({}).populate('author');
+        const prePromiseLineUps = JSON.parse(JSON.stringify(lineups));
+        const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
+            return await getLikes(lineup, user);
+        }));
+        const popularLineups = lineupLikes.sort((a, b) => b.numberOfLikes - a.numberOfLikes);
+        res.status(200).json(popularLineups);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 // @desc    Get one line-ups
 // @route   GET /lineup/:lineupId
 // @access  Private
