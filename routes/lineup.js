@@ -16,8 +16,9 @@ router.get('/', isAuthenticated, async (req, res, next) => {
         const prePromiseLineUps = JSON.parse(JSON.stringify(lineups));
         const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
             return await getLikes(lineup, user);
-        }))
-        res.status(200).json(lineupLikes);
+        }));
+        const sortedLineups = lineupLikes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        res.status(200).json(sortedLineups);
     } catch (error) {
         console.log(error);
     }
@@ -32,8 +33,9 @@ router.get('/lineup', async (req, res, next) => {
         const prePromiseLineUps = JSON.parse(JSON.stringify(lineups));
         const lineupLikes = await Promise.all(prePromiseLineUps.map(async (lineup) => {
             return await getLikes(lineup, null);
-        }))
-        res.status(200).json(lineupLikes);
+        }));
+        const sortedLineups = lineupLikes.sort((a, b) => new Date(b.createdAt) - new Date (a.createdAt));
+        res.status(200).json(sortedLineups);
     } catch (error) {
         console.log(error);
     }
