@@ -56,6 +56,9 @@ router.get('/search', async (req, res, next) => {
     }
 });
 
+// @desc    Filter lineups by popularity
+// @route   GET lineup/popularity
+// @access  Public
 router.get('/popularity', isAuthenticated ,async (req, res, next) => {
     const user = req.payload;
     try {
@@ -70,6 +73,25 @@ router.get('/popularity', isAuthenticated ,async (req, res, next) => {
         console.log(error);
     }
 });
+
+// @desc    Get rankig
+// @route   GET /lineup/ranking
+// @access  Public
+router.get('/ranking', async (req, res, next) => {
+    try {
+        const lineups = await LineUp.aggregate([
+            { $group: { _id: "$author", numLineUps: { $sum: 1 } } },
+            { $sort: { numLineUps: -1 } },
+            { $limit: 5 },
+            { $lookup: { from: "users", localField: "_id", foreignField: "_id", as: "user" } },
+            { $unwind: "$user" },
+            { $project: { _id: "$user._id", numLineUps: 1, username: "$user.username", image: "$user.image" } }
+          ]);
+        res.status(200).json(lineups);
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 // @desc    Get one line-ups
 // @route   GET /lineup/:lineupId
