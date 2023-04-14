@@ -116,6 +116,10 @@ router.get('/:lineupId', isAuthenticated ,async (req, res, next) => {
 router.post('/', isAuthenticated, async (req, res, next) => {
     const { title, agent, map, description, video } = req.body;
     const userId = req.payload._id
+    const regex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/i;
+    if (!regex.test(video)) {
+    return res.status(400).json({ message: 'Invalid YouTube URL' });
+    }
     try {
         const newLineup = await LineUp.create({ title, agent, map, description, video, author: userId });
         res.status(201).json(newLineup);
