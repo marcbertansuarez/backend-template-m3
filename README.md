@@ -1,4 +1,5 @@
 # Project's name REST API
+
 ## Description
 
 This is a the backend repository for the React application `ValoVision`.
@@ -10,23 +11,31 @@ This is a the backend repository for the React application `ValoVision`.
 When cloning the project, change the <code>sample.env</code> file name for <code>.env</code>. The project will run on **PORT 8000**.
 
 Then, run:
+
 ```bash
 npm install
 ```
+
 ## Scripts
 
 - To start the project run:
+
 ```bash
 npm run start
 ```
+
 - To start the project in development mode, run:
+
 ```bash
 npm run dev
 ```
+
 - To seed the database, run:
+
 ```bash
 npm run seed
 ```
+
 ---
 
 ## Models
@@ -48,7 +57,7 @@ Users in the database have the following properties:
   username: {
     type: String,
     unique: true,
-    required: true 
+    required: true
   },
   role: {
     type: String,
@@ -93,12 +102,12 @@ LineUps in the database have the following properties:
   reviewsCount: {
     type: Number,
     default: 0
-  } 
+  }
 
   ### Review
 
   Reviews in the database have the following properties:
-  
+
   content: {
   type: String,
   required: [true, "Content is required"]
@@ -128,41 +137,39 @@ LineUps in the database have the following properties:
 
 ---
 
-## API endpoints and usage 
+## API endpoints and usage
 
 ## Endpoints
 
-| Action                           | Method | Endpoint              | Req.body                    | Private/Public |
-|----------------------------------|--------|-----------------------|-----------------------------|----------------|
-| Register user                    | POST   | /api/v1/auth/signup  | username, password, email, image| Public|
-| Login user                       | POST   | /api/v1/auth/login    | usernameOrEmail, password   | Public|
-| Get logged in user               | GET    | /api/v1/auth/me       |                             | Private|
-| Get all line-ups                 | GET    | /lineup               |                             | Private|
-| Get all line-ups                 | GET    | /lineup/lineup        |                             | Public|
-| Search lineups for agents        | GET    | /lineup/search        |                             | Public|
-| Filter lineups by popularity     | GET    | /lineup/popularity    |                             | Public|
-| Get ranking                      | GET    | /lineup/ranking       |                             | Public|
-| Get one line-up                  | GET    | /lineup/:lineupId     |                             | Private|
-| Create one line-up       | POST   | /lineup               | title, agent, map, description, video | Private|
-| Edit one line-up         | PUT    | /lineup/:lineupId     | title, agent, map, description, video | Private|
-| Delete one line-up               | DELETE | /lineup/:lineupId     |                             | Private|
-| Profile user                     | GET    | /profile              |                             | Private|
-| Edit user profile                | PUT    | /profile/edit         | username, image (optional)  | Private|
-| Get liked line-ups               | GET    | /profile/liked        |                             | Private|
-| Get user by ID                   | GET    | /profile/:userId      |                             | Private|
-| Create review for a lineup       | POST   | /review/:lineupId     | content                     | Private|
-| Edit review for a lineup         | PUT    | /review/:reviewId     | content                     | Private|
-| Delete review for a lineup       | DELETE | /review/:reviewId     |                             | Private|
-| Like and dislike one line-up     | POST   | /like/:lineupId       |                             | Private|
-| Index page for the API           | GET    | /                     |                             | Public |
-
+| Action                       | Method | Endpoint            | Req.body                    | Private/Public |
+| ---------------------------- | ------ | ------------------- | ------------------------------------- | -------------- |
+| Register user                | POST   | /api/v1/auth/signup | username, password, email, image   | Public|
+| Login user                   | POST   | /api/v1/auth/login  | usernameOrEmail, password          | Public|
+| Get logged in user           | GET    | /api/v1/auth/me     |                                    | Private|
+| Get all line-ups             | GET    | /lineup             |                                    | Private|
+| Get all line-ups             | GET    | /lineup/lineup      |                                    | Public|
+| Search lineups for agents    | GET    | /lineup/search      |                                    | Public|
+| Filter lineups by popularity | GET    | /lineup/popularity  |                                    | Public|
+| Get ranking                  | GET    | /lineup/ranking     |                                    | Public|
+| Get one line-up              | GET    | /lineup/:lineupId   |                                    | Private|
+| Create one line-up           | POST   | /lineup           | title, agent, map, description, video| Private|
+| Edit one line-up             | PUT    | /lineup/:lineupId | title, agent, map, description, video| Private|
+| Delete one line-up           | DELETE | /lineup/:lineupId   |                                    | Private|
+| Profile user                 | GET    | /profile                                                 | Private|
+| Edit user profile            | PUT    | /profile/edit       | username, image                    | Private|
+| Get liked line-ups           | GET    | /profile/liked      |                                    | Private|
+| Get user by ID               | GET    | /profile/:userId    |                                    | Private|
+| Create review for a lineup   | POST   | /review/:lineupId   | content                            | Private|
+| Edit review for a lineup     | PUT    | /review/:reviewId   | content                            | Private|
+| Delete review for a lineup   | DELETE | /review/:reviewId   |                                    | Private|
+| Like and dislike one line-up | POST   | /like/:lineupId     |                                    | Private|
+| Index page for the API       | GET    | /                   |                                    | Public|
 
 ---
 
 ## Useful links
 
-- [Presentation slides]()
+- [Presentation slides](https://slides.com/marcbs/valovision)
 - [Frontend repository](https://github.com/marcbertansuarez/frontend-template-m3)
 - [Frontend deploy](https://valovision.netlify.app/)
 - [Deployed REST API]()
-
