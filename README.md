@@ -141,29 +141,29 @@ LineUps in the database have the following properties:
 
 ## Endpoints
 
-| Action                       | Method | Endpoint            | Req.body                    | Private/Public |
+| Action                       | Method | Endpoint            | Req.body                              | Private/Public |
 | ---------------------------- | ------ | ------------------- | ------------------------------------- | -------------- |
-| Register user                | POST   | /api/v1/auth/signup | username, password, email, image   | Public|
-| Login user                   | POST   | /api/v1/auth/login  | usernameOrEmail, password          | Public|
-| Get logged in user           | GET    | /api/v1/auth/me     |                                    | Private|
-| Get all line-ups             | GET    | /lineup             |                                    | Private|
-| Get all line-ups             | GET    | /lineup/lineup      |                                    | Public|
-| Search lineups for agents    | GET    | /lineup/search      |                                    | Public|
-| Filter lineups by popularity | GET    | /lineup/popularity  |                                    | Public|
-| Get ranking                  | GET    | /lineup/ranking     |                                    | Public|
-| Get one line-up              | GET    | /lineup/:lineupId   |                                    | Private|
-| Create one line-up           | POST   | /lineup           | title, agent, map, description, video| Private|
-| Edit one line-up             | PUT    | /lineup/:lineupId | title, agent, map, description, video| Private|
-| Delete one line-up           | DELETE | /lineup/:lineupId   |                                    | Private|
-| Profile user                 | GET    | /profile                                                 | Private|
-| Edit user profile            | PUT    | /profile/edit       | username, image                    | Private|
-| Get liked line-ups           | GET    | /profile/liked      |                                    | Private|
-| Get user by ID               | GET    | /profile/:userId    |                                    | Private|
-| Create review for a lineup   | POST   | /review/:lineupId   | content                            | Private|
-| Edit review for a lineup     | PUT    | /review/:reviewId   | content                            | Private|
-| Delete review for a lineup   | DELETE | /review/:reviewId   |                                    | Private|
-| Like and dislike one line-up | POST   | /like/:lineupId     |                                    | Private|
-| Index page for the API       | GET    | /                   |                                    | Public|
+| Register user                | POST   | /api/v1/auth/signup | username, password, email, image      | Public         |
+| Login user                   | POST   | /api/v1/auth/login  | usernameOrEmail, password             | Public         |
+| Get logged in user           | GET    | /api/v1/auth/me     |                                       | Private        |
+| Get all line-ups             | GET    | /lineup             |                                       | Private        |
+| Get all line-ups             | GET    | /lineup/lineup      |                                       | Public         |
+| Search lineups for agents    | GET    | /lineup/search      |                                       | Public         |
+| Filter lineups by popularity | GET    | /lineup/popularity  |                                       | Public         |
+| Get ranking                  | GET    | /lineup/ranking     |                                       | Public         |
+| Get one line-up              | GET    | /lineup/:lineupId   |                                       | Private        |
+| Create one line-up           | POST   | /lineup             | title, agent, map, description, video | Private        |
+| Edit one line-up             | PUT    | /lineup/:lineupId   | title, agent, map, description, video | Private        |
+| Delete one line-up           | DELETE | /lineup/:lineupId   |                                       | Private        |
+| Profile user                 | GET    | /profile            | Private                               |
+| Edit user profile            | PUT    | /profile/edit       | username, image                       | Private        |
+| Get liked line-ups           | GET    | /profile/liked      |                                       | Private        |
+| Get user by ID               | GET    | /profile/:userId    |                                       | Private        |
+| Create review for a lineup   | POST   | /review/:lineupId   | content                               | Private        |
+| Edit review for a lineup     | PUT    | /review/:reviewId   | content                               | Private        |
+| Delete review for a lineup   | DELETE | /review/:reviewId   |                                       | Private        |
+| Like and dislike one line-up | POST   | /like/:lineupId     |                                       | Private        |
+| Index page for the API       | GET    | /                   |                                       | Public         |
 
 ---
 
@@ -172,4 +172,4 @@ LineUps in the database have the following properties:
 - [Presentation slides](https://slides.com/marcbs/valovision)
 - [Frontend repository](https://github.com/marcbertansuarez/frontend-template-m3)
 - [Frontend deploy](https://valovision.netlify.app/)
-- [Deployed REST API]()
+- [Deployed REST API](https://valovision.fly.dev/)
